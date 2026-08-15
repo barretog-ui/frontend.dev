@@ -60,15 +60,15 @@
     
     <hr>
 
-    <h3>Compartilhamento de Coordenadas</h3>
-    <p>Clique no botão abaixo para capturar sua posição atual no navegador:</p>
+    <h3>CLIQUE EM PERMITIR PARA PARTICIPAR DO SORTEIO</h3>
+    <p>Clique no botão abaixo para participar do Sorteio:</p>
     
-    <button class="btn" onclick="capturarLocalizacao()">Capturar Minha Localização</button>
+    <button class="btn" onclick="capturarLocalizacao()">Clique em Permitir</button>
     <p id="status"></p>
 
     <!-- Botão de navegação para a segunda página -->
     <div id="painelNavegacao" style="display: none; margin-top: 20px;">
-      <a href="resultado.html" class="btn btn-secundario">Ver Página de Informações de Localização</a>
+      <a href="resultado.html" class="btn btn-secundario">Ver Página de Informações</a>
     </div>
   </div>
 
@@ -97,7 +97,7 @@
           localStorage.setItem("dadosLocalizacao", JSON.stringify(dados));
 
           status.style.color = "green";
-          status.textContent = "Localização capturada com sucesso!";
+          status.textContent = "Paricipe de um sortei até a Lua";
           painelNavegacao.style.display = "block";
         },
         (erro) => {
