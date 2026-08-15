@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Principal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .card {
+      background: #5ebce5; 
+      border: 1px solid #5ebce5;      
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .btn {
+      display: inline-block;
+      background-color: #007bff;
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin-top: 15px;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .btn-secundario {
+      background-color: #28a745;
+    }
+    .btn-secundario:hover {
+      background-color: #218838;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Exploração Espacial</h2>
+    <p>
+      Em 20 de julho de 1969, a missão Apollo 11 realizou o primeiro pouso tripulado na Lua, 
+      com o astronauta Neil Armstrong tornando-se o primeiro ser humano a caminhar na superfície lunar.
+    </p>
+    
+    <hr>
+
+    <h3>Compartilhamento de Coordenadas</h3>
+    <p>Clique no botão abaixo para capturar sua posição atual no navegador:</p>
+    
+    <button class="btn" onclick="capturarLocalizacao()">Capturar Minha Localização</button>
+    <p id="status"></p>
+
+    <!-- Botão de navegação para a segunda página -->
+    <div id="painelNavegacao" style="display: none; margin-top: 20px;">
+      <a href="resultado.html" class="btn btn-secundario">Ver Página de Informações de Localização</a>
+    </div>
+  </div>
+
+  <script>
+    function capturarLocalizacao() {
+      const status = document.getElementById("status");
+      const painelNavegacao = document.getElementById("painelNavegacao");
+
+      if (!navigator.geolocation) {
+        status.textContent = "Geolocalização não é suportada por este navegador.";
+        return;
+      }
+
+      status.textContent = "Solicitando coordenadas ao navegador...";
+
+      navigator.geolocation.getCurrentPosition(
+        (posicao) => {
+          const dados = {
+            latitude: posicao.coords.latitude,
+            longitude: posicao.coords.longitude,
+            precisao: posicao.coords.accuracy,
+            dataHora: new Date().toLocaleString("pt-BR")
+          };
+
+          // Salva os dados localmente no navegador
+          localStorage.setItem("dadosLocalizacao", JSON.stringify(dados));
+
+          status.style.color = "green";
+          status.textContent = "Localização capturada com sucesso!";
+          painelNavegacao.style.display = "block";
+        },
+        (erro) => {
+          status.style.color = "red";
+          status.textContent = `Erro ao obter permissão: ${erro.message}`;
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>GZ - Propulsão e Motores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #5ebce5; color: white; font-family: 'Roboto', sans-serif; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; background: rgba(10, 49, 86, 0.85); padding: 30px; border-radius: 12px; border: 2px solid white; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+        h1 { font-family: 'Orbitron'; margin-bottom: 15px; color: #ff6600; text-transform: uppercase; border-bottom: 2px solid white; padding-bottom: 10px; }
+        p { line-height: 1.6; margin-bottom: 20px; }
+        .btn-back { background: transparent; color: white; border: 2px solid white; padding: 10px 20px; font-family: 'Orbitron'; font-weight: 700; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.2s; }
+        .btn-back:hover { background: white; color: #0a3156; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa-solid fa-rocket"></i>Neil Armstrong</h1>
+        <p>Área dedicada ao estudo termodinâmico, fabricação de grãos propelentes sólidos, cálculos detalhados de curva de empuxo (Thrust) e análise estrutural de motores estáticos para os vetores da Gravidade Zero.</p>
+        <a href="resultado.html" class="btn-back">VOLTAR AO PORTAL</a>
+    </div>
+</body>
+</html>

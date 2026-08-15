@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dados da Localização</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .card {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .destaque {
+      font-weight: bold;
+    }
+    .btn-voltar {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 16px;
+      background: #6c757d;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .btn-voltar:hover {
+      background: #5a6268;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Detalhes da Localização</h2>
+    <div id="conteudo">
+      <p>Carregando dados salvos...</p>
+    </div>
+    
+    <a href="index2.html" class="btn-voltar">← Voltar para a Página Principal</a>
+  </div>
+
+  <script>
+    async function carregarDados() {
+      const conteudo = document.getElementById("conteudo");
+      const dadosSalvos = localStorage.getItem("dadosLocalizacao");
+
+      if (!dadosSalvos) {
+        conteudo.innerHTML = "<p>Nenhuma localização foi registrada ainda. Volte à página inicial e clique em capturar.</p>";
+        return;
+      }
+
+      const { latitude, longitude, precisao, dataHora } = JSON.parse(dadosSalvos);
+
+      conteudo.innerHTML = "<p>Buscando endereço correspondente...</p>";
+
+      try {
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`;
+        const resposta = await fetch(url, {
+          headers: { 'Accept-Language': 'pt-BR' }
+        });
+        const dados = await resposta.json();
+        const end = dados.address || {};
+
+        const rua = end.road || end.pedestrian || end.street || "Logradouro não informado";
+        const numero = end.house_number ? `, nº ${end.house_number}` : "";
+        const bairro = end.suburb || end.neighbourhood || "Bairro não informado";
+        const cidade = end.city || end.town || end.municipality || "Cidade não informada";
+        const estado = end.state || "";
+
+        conteudo.innerHTML = `
+          <p><span class="destaque">Rua/Avenida:</span> ${rua}${numero}</p>
+          <p><span class="destaque">Bairro:</span> ${bairro}</p>
+          <p><span class="destaque">Cidade/UF:</span> ${cidade} - ${estado}</p>
+          <hr>
+          <p><span class="destaque">Latitude:</span> ${latitude.toFixed(6)}</p>
+          <p><span class="destaque">Longitude:</span> ${longitude.toFixed(6)}</p>
+          <p><span class="destaque">Precisão:</span> ~${Math.round(precisao)}m</p>
+          <p><span class="destaque">Data/Hora da Coleta:</span> ${dataHora}</p>
+          <hr>
+          <p><a href="https://www.google.com/maps?q=${latitude},${longitude}" target="_blank" style="color: #007bff; font-weight: bold;">📍 Abrir no Google Maps</a></p>
+        `;
+      } catch (err) {
+        conteudo.innerHTML = `
+          <p><span class="destaque">Latitude:</span> ${latitude}</p>
+          <p><span class="destaque">Longitude:</span> ${longitude}</p>
+          <p style="color: red;">Não foi possível converter as coordenadas em endereço textual no momento.</p>
+        `;
+      }
+    }
+
+    window.onload = carregarDados;
+  </script>
+
+</body>
+</html> 
